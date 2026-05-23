@@ -23,8 +23,6 @@
 
 <!-- Project page: https://zcliangyue.github.io/HorizonDrive/ -->
 
----
-
 ## 📌 TODO
 
 - [ ] Nuscenes Inference code
@@ -32,28 +30,22 @@
 
 > Code coming soon — stay tuned!
 
----
 
 ## 🌍 Overview
 
-**HorizonDrive** is an anti-drifting training-and-distillation framework for **real-time, long-horizon autoregressive driving simulation**. The goal is to make the **teacher rollout-capable** so that its own autoregressive rollouts remain stable and provide reliable long-horizon supervision at bounded memory.
-
----
+**HorizonDrive is an anti-drifting training-and-distillation framework for minute-scale autoregressive driving simulation.** Through self-corrective teacher training and teacher rollout long-horizon distillation, HorizonDrive enables minute-scale, action-controllable autoregressive video generation of complex driving scenarios on a single GPU, and supports closed-loop interactive simulation.
 
 ## ✨ Key Features
 
-* **Controllable autonomous video generation**
-* **Long-horizon AR rollout**
-* **Few-step inference by distillation**
-* **Close-loop simulation**
-
----
+* Controllable driving scene generation.
+* Stable minute-scale autoregressive rollout.
+* Interactive AR rollout for closed-loop driving simulation.
+* Generalizable across diverse driving scenes and scenarios.
+* No reliance on explicit 3D representations.
 
 ## 🧪 Abstract
 
 Closed-loop driving simulation requires real-time interaction beyond short offline clips, pushing current driving world models toward autoregressive (AR) rollout. Existing AR distillation approaches typically rely on frame sinks or student-side degradation training. The former transfers poorly to driving due to fast ego-motion and rapid scene changes, while the latter remains bounded by the teacher’s single-pass output length and thus provides only a limited supervision horizon. A natural question is: can the teacher itself be extended via AR rollout to provide unbounded-horizon supervision at bounded memory cost? The key difficulty is that a standard teacher drifts under its own predictions, contaminating the supervision it provides. **Our key insight is to make the teacher rollout-capable, ensuring reliable supervision from its own AR rollouts.** This is instantiated as HorizonDrive, an anti-drifting training-and-distillation framework for AR driving simulation. First, scheduled rollout recovery (SRR) trains the base model to reconstruct ground-truth future clips from prediction-corrupted histories, yielding a teacher that remains stable across long AR rollouts. Second, the rollout-capable teacher is extended via AR rollout, providing long-horizon distribution-matching supervision under bounded memory, while a short-window student aligns to it with teacher rollout DMD (TRD) for efficient real-time deployment. HorizonDrive natively supports minute-scale AR rollout under bounded memory; on nuScenes, HorizonDrive reduces FID by 52% and FVD by 37%, and lowers ARE and DTW by 21% and 9% relative to the strongest long-horizon streaming baselines, while remaining competitive with single-pass driving video generators.
-
----
 
 
 ## 📚 Citation
@@ -71,8 +63,6 @@ If you find our work useful, please cite it as
   url={https://arxiv.org/abs/2605.11596},
 }
 ```
-
----
 
 ## Acknowledgments
 
