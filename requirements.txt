@@ -1,0 +1,55 @@
+# Python environment dependencies for evaluation.
+
+# PyTorch 2.7+ is required by videox_fun.models.* for torch.nn.attention.flex_attention.
+--extra-index-url https://download.pytorch.org/whl/cu128
+torch==2.8.0+cu128
+torchvision==0.23.0+cu128
+
+# Training / inference stack.
+accelerate==1.11.0
+diffusers==0.31.0
+transformers==4.56.1
+datasets==4.4.2
+safetensors==0.7.0
+sentencepiece==0.2.1
+typing_extensions==4.15.0
+
+# Config and utility dependencies.
+addict==2.4.0
+einops==0.8.1
+ftfy==6.3.1
+omegaconf==2.3.0
+packaging==25.0
+psutil==7.2.1
+pydantic==2.12.5
+PyYAML==6.0.3
+tqdm==4.67.1
+yapf==0.43.0
+
+# Data, image and video processing.
+decord==0.6.0
+func-timeout==4.3.5
+imageio[ffmpeg,pyav]==2.37.2
+matplotlib==3.10.8
+numpy==1.26.4
+opencv-python-headless==4.11.0.86
+Pillow==11.3.0
+scikit-image==0.25.2
+scipy==1.15.3
+shapely==2.0.7
+pyquaternion==0.9.9
+
+# nuScenes devkit. This replaces the vendored top-level nuscenes/ copy when
+# code is run outside the repository root or with a sys.path that does not
+# shadow site-packages.
+nuscenes-devkit==1.2.0
+
+# Metrics used by horizondrive.utils.metric_utils.
+timm==1.0.24
+torchmetrics==1.7.4
+
+# Block-sparse attention path used by horizondrive.utils.block_attention.
+block-sparse-attn==0.0.1
+
+# Optional runtime accelerators used only when installed:
+# flash-attn, sageattention, xfuser/pai_fuser, deepspeed

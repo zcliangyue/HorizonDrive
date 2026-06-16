@@ -1,0 +1,88 @@
+format: civitai
+pipeline: videox_fun.pipeline.WanFunUnifiedPipeline
+
+transformer_additional_kwargs:
+  transformer_subpath: ./
+  dict_mapping:
+    in_dim: in_channels
+    dim: hidden_size
+  position_embedding_kwargs:
+    type: videox_fun.models.wan_transformer3d_unified_6v.RopeEmb
+  additional_condition_kwargs:
+    action:
+      type: videox_fun.models.wan_transformer3d_unified_6v.ActionConditioningProj
+    bbox:
+      type: videox_fun.models.wan_transformer3d_unified_6v.ImageConditioningProj
+      kwargs:
+        in_dim: 16
+    hdmap:
+      type: videox_fun.models.wan_transformer3d_unified_6v.ImageConditioningProj
+      kwargs:
+        in_dim: 16
+
+vae_kwargs:
+  vae_subpath: horizondrive-vae.pkl
+  temporal_compression_ratio: 1
+  spatial_compression_ratio: 8
+
+text_encoder_kwargs:
+  text_encoder_subpath: models_t5_umt5-xxl-enc-bf16.pth
+  tokenizer_subpath: google/umt5-xxl
+  text_length: 512
+  vocab: 256384
+  dim: 4096
+  dim_attn: 4096
+  dim_ffn: 10240
+  num_heads: 64
+  num_layers: 24
+  num_buckets: 32
+  shared_pos: false
+  dropout: 0.0
+
+scheduler_kwargs:
+  scheduler_subpath: null
+  num_train_timesteps: 1000
+  shift: 5.0
+  use_dynamic_shifting: false
+  base_shift: 0.5
+  max_shift: 1.15
+  base_image_seq_len: 256
+  max_image_seq_len: 4096
+
+image_encoder_kwargs:
+  image_encoder_subpath: models_clip_open-clip-xlm-roberta-large-vit-huge-14.pth
+
+trainer_kwargs:
+  train_type: rollout_dmd
+  train_mode: unified
+  use_t_variant_noise: true
+  denoising_step_indices_list: [1000, 700, 500, 50]
+
+validation_kwargs:
+  dataset_kwargs:
+    nuscenes_rollout_val:
+      type: horizondrive.datasets.nuscenes_dataset.nuScenesDataset
+      kwargs:
+        samples_path: "./nuScenes/origin"
+        ann_path: "./nuScenes-metadata-full/nuscenes_mmdet3d-12Hz/nuscenes_interp_12Hz_infos_val_with_bid.pkl"
+        valid_conditions: [action, bbox, hdmap]
+        video_length: "full"
+        temporal_compression_ratio: 1
+        mode: val
+        camera_names: [camera_front]
+
+  val_modes:
+    i2v_cond_unroll_211f:
+      dataset_name: nuscenes_rollout_val
+      kwargs:
+        model_mode: i2v
+        resolution: [21, 384, 768]
+        conditions: [action, bbox, hdmap]
+      pipeline_kwargs:
+        num_condition_images: 11
+        num_unroll_steps: 20
+        infer_image_len: -1
+        latent_rollout: true
+
+  eval_metrics: [fid, fvd]
+  max_validation_samples: 150

@@ -1,0 +1,8 @@
+__pycache__/
+*.py[cod]
+logs/*
+nuscenes/
+/nuScenes/
+/nuScenes-metadata-full/
+/models/
+.tmp/
